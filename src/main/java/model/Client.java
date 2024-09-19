@@ -10,7 +10,9 @@ public class Client {
     private boolean estProfessionnel;
 
     // Constructeur par défaut :
-    public Client() {}
+    public Client() {
+        this.id = UUID.randomUUID();
+    }
 
     // Constructeur avec tous les attributs :
     public Client(UUID id, String nom, String adresse, String telephone, boolean estProfessionnel){
