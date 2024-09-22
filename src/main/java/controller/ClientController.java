@@ -3,6 +3,8 @@ package controller;
 import model.Client;
 import service.interfaces.ClientService;
 import util.tools;
+
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -41,8 +43,31 @@ public class ClientController {
 
         System.out.println(clientService.ajouterClient(client) ? "Ajout réussi." : "Échec de l'ajout.");
 
-
     }
+
+    public void afficherClients() {
+        List<Client> clients = clientService.getAllClients();
+        if (clients.isEmpty()) {
+            System.out.println("Aucun client à afficher.");
+        } else {
+            System.out.println("Vos clients :");
+            System.out.println("-------------------------------------------------------------------------");
+            System.out.println("|      NOM      |      ADRESSE      |   TELEPHONE   |   EST_PROFESSIONNEL  |");
+            System.out.println("-------------------------------------------------------------------------");
+            for (Client client : clients) {
+                System.out.printf("| %-12s | %-16s | %-12s | %-16s |\n",
+                        client.getNom(),
+                        client.getAdresse(),
+                        client.getTelephone(),
+                        client.getEstProfessionnel() ? "Oui" : "Non"
+                );
+            }
+            System.out.println("---------------------------------------------------------------------");
+        }
+    }
+
+
+
 
 
 }

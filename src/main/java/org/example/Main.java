@@ -22,7 +22,8 @@ public class Main {
                 ClientController clientController = new ClientController(clientService);
 
                 // méthode ajouter un client
-                clientController.ajouterClient();
+             clientController.ajouterClient();
+             clientController.afficherClients();
             } catch (Exception e) {
                 System.out.println("Erreur lors de l'utilisation de la connexion : " + e.getMessage());
             }

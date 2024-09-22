@@ -1,8 +1,9 @@
 package model;
 
-import java.util.*;
+import java.io.Serial;
 
 public class Client {
+    private Integer id;
     private String nom;
     private String adresse;
     private String telephone;
@@ -14,7 +15,7 @@ public class Client {
     }
 
     // Constructeur avec tous les attributs :
-    public Client(String nom, String adresse, String telephone, boolean estProfessionnel){
+    public Client(String nom, String adresse, String telephone, boolean estProfessionnel) {
         this.nom = nom;
         this.adresse = adresse;
         this.telephone = telephone;
@@ -63,5 +64,13 @@ public class Client {
                 ", telephone='" + telephone + '\'' +
                 ", estProfessionnel=" + estProfessionnel +
                 '}';
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer generatedId) {
+        this.id = generatedId;
     }
 }

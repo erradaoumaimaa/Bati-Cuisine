@@ -4,7 +4,7 @@ import model.Client;
 import repository.interfaces.ClientRepository;
 import service.interfaces.ClientService;
 
-import java.io.Serial;
+
 import java.util.List;
 
 public class ClientServiceImpl implements ClientService {
@@ -20,7 +20,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client getClient(Serial id) {
+    public Client getClient(Integer id) {
         return clientRepository.getClient(id);
     }
 
