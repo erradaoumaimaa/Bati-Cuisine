@@ -3,7 +3,6 @@ package model;
 import java.util.*;
 
 public class Client {
-    private UUID id;
     private String nom;
     private String adresse;
     private String telephone;
@@ -11,12 +10,11 @@ public class Client {
 
     // Constructeur par défaut :
     public Client() {
-        this.id = UUID.randomUUID();
+
     }
 
     // Constructeur avec tous les attributs :
-    public Client(UUID id, String nom, String adresse, String telephone, boolean estProfessionnel){
-        this.id = id;
+    public Client(String nom, String adresse, String telephone, boolean estProfessionnel){
         this.nom = nom;
         this.adresse = adresse;
         this.telephone = telephone;
@@ -24,13 +22,6 @@ public class Client {
     }
 
     // Getters et Setters
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getNom() {
         return nom;
@@ -56,7 +47,7 @@ public class Client {
         this.telephone = telephone;
     }
 
-    public boolean isEstProfessionnel() {
+    public boolean getEstProfessionnel() {
         return estProfessionnel;
     }
 
@@ -67,8 +58,7 @@ public class Client {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
+                " nom='" + nom + '\'' +
                 ", adresse='" + adresse + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", estProfessionnel=" + estProfessionnel +
