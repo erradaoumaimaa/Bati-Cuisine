@@ -15,8 +15,8 @@ public class Materiau extends Composant {
     }
 
     // Constructeur avec tous les attributs :
-    public Materiau(UUID id, String nom, String typeComposant, double tauxTVA, double coutUnitaire, double quantite, double coutTransport, double coefficientQualite) {
-        super(id, nom, typeComposant, tauxTVA);
+    public Materiau(Integer id, String nom, String typeComposant, double tauxTVA,Integer projetId ,double coutUnitaire, double quantite, double coutTransport, double coefficientQualite) {
+        super(id, nom, typeComposant, tauxTVA,projetId);
         this.coutUnitaire = coutUnitaire;
         this.quantite = quantite;
         this.coutTransport = coutTransport;

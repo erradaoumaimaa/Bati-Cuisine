@@ -16,9 +16,11 @@ CREATE TABLE projets (
     nomProjet VARCHAR(100),
     margeBeneficiaire DOUBLE PRECISION,
     coutTotal DOUBLE PRECISION,
+    surfaceCuisine DOUBLE PRECISION,
     etatProjet EtatProjet,
-    client_id INT REFERENCES clients(id) 
-	);
+    client_id INT REFERENCES clients(id)
+);
+
 -- Table Composants :
 CREATE TABLE composants (
     id SERIAL PRIMARY KEY,

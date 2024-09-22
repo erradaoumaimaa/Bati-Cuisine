@@ -5,30 +5,34 @@ import Enum.EtatProjet;
 import java.util.*;
 
 public class Projet {
-    private UUID id;
+    private Integer id;
     private String nomProjet;
     private double margeBeneficiaire;
     private double coutTotal;
+    private double surfaceCuisine;
     private EtatProjet etatProjet;
+    private Integer clientId;
+
 
     // Constructeur par défaut :
     public Projet() {}
 
     // Constructeur avec tous les attributs :
-    public Projet(UUID id, String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etatProjet) {
-        this.id = id;
+    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal,double surfaceCuisine, EtatProjet etatProjet, Integer clientId) {
         this.nomProjet = nomProjet;
         this.margeBeneficiaire = margeBeneficiaire;
         this.coutTotal = coutTotal;
+        this.surfaceCuisine = surfaceCuisine;
         this.etatProjet = etatProjet;
+        this.clientId = clientId;
     }
 
     // Getters et Setters
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -64,6 +68,12 @@ public class Projet {
         this.etatProjet = etatProjet;
     }
 
+    public Integer getClientId() {
+        return clientId;
+    }
+    public void setClientId(Integer clientId) {
+        this.clientId = clientId;
+    }
     @Override
     public String toString() {
         return "Projet{" +
@@ -72,6 +82,7 @@ public class Projet {
                 ", margeBeneficiaire=" + margeBeneficiaire +
                 ", coutTotal=" + coutTotal +
                 ", etatProjet=" + etatProjet +
+                ", client_ID=" + clientId +
                 '}';
     }
 }

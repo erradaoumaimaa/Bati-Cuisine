@@ -66,9 +66,19 @@ public class ClientController {
         }
     }
 
-    private void searchClientByName(Scanner scanner) {
-        System.out.print("Entrez le nom du client : ");
+    public Client findClient() {
+        System.out.print("Entrez le nom du client à rechercher : ");
+        String clientName = scanner.nextLine();
 
+        Client foundClient = clientService.searchClientByName(clientName);
+
+        if (foundClient != null) {
+            System.out.println("Client trouvé : " + foundClient);
+            return foundClient;
+        } else {
+            System.out.println("Client non trouvé.");
+            return null;
+        }
     }
 
 

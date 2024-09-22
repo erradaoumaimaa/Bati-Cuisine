@@ -14,8 +14,8 @@ public class MainOeuvre extends Composant {
     }
 
     // Constructeur avec tous les attributs :
-    public MainOeuvre(UUID id, String nom, String typeComposant, double tauxTVA, double tauxHoraire, double heuresTravail, double productiviteOuvrier) {
-        super(id, nom, typeComposant, tauxTVA);
+    public MainOeuvre(Integer id, String nom, String typeComposant, double tauxTVA, Integer projetId,double tauxHoraire, double heuresTravail, double productiviteOuvrier) {
+        super(id, nom, typeComposant, tauxTVA,projetId);
         this.tauxHoraire = tauxHoraire;
         this.heuresTravail = heuresTravail;
         this.productiviteOuvrier = productiviteOuvrier;

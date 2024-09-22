@@ -2,7 +2,9 @@ package controller;
 
 import model.Client;
 import service.implementation.ClientServiceImpl;
+import service.implementation.ProjectServiceImpl;
 import service.interfaces.ClientService;
+import service.interfaces.ProjectService;
 import util.tools;
 
 import java.sql.Connection;
@@ -13,10 +15,14 @@ public class AppMenu {
     private static AppMenu instance;
     private final ClientService clientService;
     private final ClientController clientController;
+    private final ProjectService projectService;
+    private final ProjectController projectController;
 
     private AppMenu(Connection connection) throws SQLException {
         this.clientService = new ClientServiceImpl(connection);
         this.clientController = new ClientController(clientService);
+        this.projectService = new ProjectServiceImpl(connection); // Initialisation du ProjectService
+        this.projectController = new ProjectController(projectService, clientService, new Scanner(System.in), clientController);
     }
 
     public static AppMenu getInstance(Connection connection) throws SQLException {
@@ -40,7 +46,7 @@ public class AppMenu {
         int choice = tools.tryParse(scanner.nextLine());
 
         switch (choice) {
-            case 1 -> createNewProject(scanner);
+            case 1 -> projectController.creerNouveauProjet(); // Appel à la méthode de création de projet
             // case 2 -> projectService.displayProjects();
             // case 3 -> projectService.calculateProjectCost();
             case 4 -> {
@@ -53,36 +59,4 @@ public class AppMenu {
 
         displayMainMenu();
     }
-
-    private void createNewProject(Scanner scanner) {
-        System.out.println("--- Recherche de client ---");
-        System.out.println("Souhaitez-vous chercher un client existant ou en ajouter un nouveau ?");
-        System.out.println("1. Chercher un client existant");
-        System.out.println("2. Ajouter un nouveau client");
-        System.out.println("3. Afficher la liste des clients");
-        System.out.print("Choisissez une option : ");
-
-        int choice = tools.tryParse(scanner.nextLine());
-        switch (choice) {
-            case 1 -> findClient(scanner);
-            case 2 -> clientController.ajouterClient();
-            case 3 -> clientController.afficherClients();
-            default -> System.out.println("Choix invalide.");
-        }
-    }
-
-    private void findClient(Scanner scanner) {
-        System.out.print("Entrez le nom du client à rechercher : ");
-        String clientName = scanner.nextLine();
-
-        Client foundClient = clientService.searchClientByName(clientName);
-
-        if (foundClient != null) {
-            System.out.println("Client trouvé : " + foundClient);
-            // Vous pouvez continuer le traitement ici si vous avez besoin d'autres actions sur le client
-        } else {
-            System.out.println("Client non trouvé.");
-        }
-    }
-
 }

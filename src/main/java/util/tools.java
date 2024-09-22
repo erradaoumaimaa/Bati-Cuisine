@@ -37,5 +37,14 @@ public class tools {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+    public static double tryParseDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            System.out.println("Entrée invalide, veuillez entrer un nombre.");
+            return 0.0;
+        }
+    }
+
 }
 
