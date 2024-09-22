@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ClientRepositoryImpl implements ClientRepository {
     private final HashMap<Integer, Client> clients = new HashMap<>();
@@ -18,7 +20,6 @@ public class ClientRepositoryImpl implements ClientRepository {
     public ClientRepositoryImpl(Connection connection) {
         this.connection = connection;
     }
-
 
     @Override
     public boolean ajouterClient(Client client) {
@@ -29,25 +30,16 @@ public class ClientRepositoryImpl implements ClientRepository {
             st.setString(3, client.getTelephone());
             st.setBoolean(4, client.getEstProfessionnel());
 
-            // Exécution de la requête et récupération de l'ID généré
             ResultSet generatedKeys = st.executeQuery();
             if (generatedKeys.next()) {
-                // Récupérer l'ID généré comme un entier
-                Integer generatedId = generatedKeys.getInt(1);
-                client.setId(generatedId); // Assure-toi que setId() est bien défini
-
-                // Ajout du client au HashMap
-                clients.put(client.getId(), client);
+                client.setId(generatedKeys.getInt(1));
                 return true;
             }
-            return false;
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout du client : " + e.getMessage());
-            return false;
+            throw new RuntimeException("Erreur lors de l'ajout du client", e);
         }
+        return false;
     }
-
-
 
     @Override
     public List<Client> getAllClients() {
@@ -58,23 +50,44 @@ public class ClientRepositoryImpl implements ClientRepository {
              ResultSet rs = st.executeQuery()) {
 
             while (rs.next()) {
-
-                Integer id = rs.getInt("id");
-                String nom = rs.getString("nom");
-                String adresse = rs.getString("adresse");
-                String telephone = rs.getString("telephone");
-                boolean estProfessionnel = rs.getBoolean("estProfessionnel");
-
-                // Créer un objet Client et l'ajouter à la liste
-                Client client = new Client( nom, adresse, telephone, estProfessionnel);
+                Client client = new Client();
+                client.setId(rs.getInt("id"));
+                client.setNom(rs.getString("nom"));
+                client.setAdresse(rs.getString("adresse"));
+                client.setTelephone(rs.getString("telephone"));
+                client.setEstProfessionnel(rs.getBoolean("estProfessionnel"));
                 allClients.add(client);
-                clients.put(id, client);
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des clients : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la récupération des clients", e);
         }
-
         return allClients;
     }
+
+    @Override
+    public Client searchClientByName(String name) {
+        String query = "SELECT * FROM Clients WHERE nom = ?";
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            st.setString(1, name);
+
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    Client client = new Client();
+                    client.setId(rs.getInt("id"));
+                    client.setNom(rs.getString("nom"));
+                    client.setAdresse(rs.getString("adresse"));
+                    client.setTelephone(rs.getString("telephone"));
+                    client.setEstProfessionnel(rs.getBoolean("estProfessionnel"));
+                    return client;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la recherche du client", e);
+        }
+        return null;
+    }
+
+
+
 
 }

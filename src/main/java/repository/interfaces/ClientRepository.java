@@ -9,4 +9,6 @@ public interface ClientRepository {
     boolean ajouterClient(Client client);
 
     List<Client> getAllClients();
+
+    Client searchClientByName(String nom);
 }

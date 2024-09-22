@@ -59,31 +59,30 @@ public class AppMenu {
         System.out.println("Souhaitez-vous chercher un client existant ou en ajouter un nouveau ?");
         System.out.println("1. Chercher un client existant");
         System.out.println("2. Ajouter un nouveau client");
+        System.out.println("3. Afficher la liste des clients");
         System.out.print("Choisissez une option : ");
 
         int choice = tools.tryParse(scanner.nextLine());
         switch (choice) {
-            case 1 -> searchClient(scanner);
-            case 2 -> clientController.ajouterClient(); // Passer le scanner si nécessaire
+            case 1 -> findClient(scanner);
+            case 2 -> clientController.ajouterClient();
+            case 3 -> clientController.afficherClients();
             default -> System.out.println("Choix invalide.");
         }
     }
 
-    private void searchClient(Scanner scanner) {
-        System.out.print("Entrez le nom du client : ");
-//        String clientName = scanner.nextLine();
-//        Client client = clientService.getClient(clientName);
-//
-//        if (client != null) {
-//            clientController.afficherClients(); // Affiche tous les clients, si nécessaire
-//            System.out.print("Souhaitez-vous continuer avec ce client ? (y/n) : ");
-//            String continueChoice = scanner.nextLine();
-//
-//            if (continueChoice.equalsIgnoreCase("y")) {
-//                // createProjectForClient(scanner, client); // À implémenter si nécessaire
-//            }
-//        } else {
-//            System.out.println("Client non trouvé.");
-//        }
+    private void findClient(Scanner scanner) {
+        System.out.print("Entrez le nom du client à rechercher : ");
+        String clientName = scanner.nextLine();
+
+        Client foundClient = clientService.searchClientByName(clientName);
+
+        if (foundClient != null) {
+            System.out.println("Client trouvé : " + foundClient);
+            // Vous pouvez continuer le traitement ici si vous avez besoin d'autres actions sur le client
+        } else {
+            System.out.println("Client non trouvé.");
+        }
     }
+
 }

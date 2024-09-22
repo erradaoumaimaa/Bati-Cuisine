@@ -66,6 +66,10 @@ public class ClientController {
         }
     }
 
+    private void searchClientByName(Scanner scanner) {
+        System.out.print("Entrez le nom du client : ");
+
+    }
 
 
 
