@@ -3,13 +3,16 @@ package repository.implementation;
 import model.Client;
 import repository.interfaces.*;
 
+import java.io.Serial;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class ClientRepositoryImpl implements ClientRepository {
+    private HashMap<Serial,Client> clients = new HashMap<>();
 
 protected Connection connection;
     public ClientRepositoryImpl(Connection connection){
@@ -33,12 +36,24 @@ protected Connection connection;
     }
 
     @Override
-    public Client getClient(UUID id) {
-        return null;
+    public Client getClient(Serial id) {
+            return clients.get(id);
     }
 
     @Override
     public List<Client> getAllClients() {
-        return List.of();
+        return new ArrayList<>(clients.values());
     }
+    public void afficherClients() {
+        List<Client> clients = getAllClients();
+        if (clients.isEmpty()) {
+            System.out.println("Aucun client à afficher.");
+        } else {
+            for (Client client : clients) {
+                System.out.println("Client: " + client.getNom() + ", Adresse: " + client.getAdresse() +
+                        ", Téléphone: " + client.getTelephone() + ", Professionnel: " + client.getEstProfessionnel());
+            }
+        }
+    }
+
 }
