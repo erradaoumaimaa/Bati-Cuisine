@@ -48,10 +48,6 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
 
-    @Override
-    public Client getClient(Integer id) {
-        return clients.get(id);
-    }
 
     @Override
     public List<Client> getAllClients() {
