@@ -1,8 +1,12 @@
 package controller;
 
 import model.Client;
+import model.MainOeuvre;
+import model.Materiau;
 import model.Projet;
 import service.interfaces.ClientService;
+import service.interfaces.MainOeuvreService;
+import service.interfaces.MateriauService;
 import service.interfaces.ProjectService;
 import util.tools;
 import Enum.EtatProjet;
@@ -10,13 +14,19 @@ import java.util.Scanner;
 
 public class ProjectController {
     private final ProjectService projectService;
-    private final ClientService clientService; // Ajout du ClientService
+    private final ClientService clientService;
+    private final MateriauService materiauService;
+    private final MainOeuvreService mainOeuvreService;
     private final Scanner scanner;
     private final ClientController clientController;
 
-    public ProjectController(ProjectService projectService, ClientService clientService, Scanner scanner,ClientController clientController) {
+    public ProjectController(ProjectService projectService, ClientService clientService,
+                             MateriauService materiauService, MainOeuvreService mainOeuvreService,
+                             Scanner scanner, ClientController clientController) {
         this.projectService = projectService;
-        this.clientService = clientService; // Initialisation
+        this.clientService = clientService;
+        this.materiauService = materiauService;
+        this.mainOeuvreService = mainOeuvreService;
         this.scanner = scanner;
         this.clientController = clientController;
     }
@@ -38,7 +48,6 @@ public class ProjectController {
                 break;
             case 2:
                 clientController.ajouterClient();
-                // Après l'ajout, tu peux rechercher le client pour continuer
                 client = clientController.findClient();
                 break;
             case 3:
@@ -58,8 +67,6 @@ public class ProjectController {
         }
     }
 
-
-
     private void continuerCreationProjet(int clientId) {
         System.out.print("Entrer le nom du projet : ");
         String nomProjet = scanner.nextLine();
@@ -67,13 +74,11 @@ public class ProjectController {
         System.out.print("Entrer la surface de la cuisine (en m²) : ");
         double surfaceCuisine = tools.tryParseDouble(scanner.nextLine());
 
-        double margeBeneficiaire;
         System.out.print("Entrer la marge bénéficiaire : ");
-        margeBeneficiaire = tools.tryParseDouble(scanner.nextLine());
+        double margeBeneficiaire = tools.tryParseDouble(scanner.nextLine());
 
-        double coutTotal;
         System.out.print("Entrer le coût total : ");
-        coutTotal = tools.tryParseDouble(scanner.nextLine());
+        double coutTotal = tools.tryParseDouble(scanner.nextLine());
 
         EtatProjet etatProjet;
         while (true) {
@@ -87,12 +92,89 @@ public class ProjectController {
             }
         }
 
+        // Création de l'objet projet
         Projet projet = new Projet(nomProjet, surfaceCuisine, margeBeneficiaire, coutTotal, etatProjet, clientId);
+
+        // Ajout du projet dans la base de données pour obtenir l'ID
         boolean ajoutReussi = projectService.ajouterProjet(projet);
-        System.out.println(ajoutReussi ? "Projet ajouté avec succès !" : "Erreur lors de l'ajout du projet.");
+
+        if (ajoutReussi) {
+            // Récupération de l'ID après insertion
+            int projetId = projet.getId();
+            System.out.println("Projet ajouté avec succès avec l'ID : " + projetId);
+
+            // Ajout des matériaux
+            ajouterMateriaux(projetId);
+
+            // Ajout de la main-d'œuvre
+            ajouterMainOeuvre(projetId);
+
+        } else {
+            System.out.println("Erreur lors de l'ajout du projet.");
+        }
     }
 
 
+    private void ajouterMateriaux(int projetId) {
+        while (true) {
+            System.out.print("Entrez le nom du matériau : ");
+            String nomMateriau = scanner.nextLine();
 
+            System.out.print("Entrez le type de composant : ");
+            String typeComposant = scanner.nextLine();
+
+            System.out.print("Entrez le taux de TVA : ");
+            double tauxTVA = tools.tryParseDouble(scanner.nextLine());
+
+            System.out.print("Entrez la quantité de ce matériau (en m²) : ");
+            double quantite = tools.tryParseDouble(scanner.nextLine());
+
+            System.out.print("Entrez le coût unitaire de ce matériau (€/m²) : ");
+            double coutUnitaire = tools.tryParseDouble(scanner.nextLine());
+
+            System.out.print("Entrez le coût de transport de ce matériau (€) : ");
+            double coutTransport = tools.tryParseDouble(scanner.nextLine());
+
+            System.out.print("Entrez le coefficient de qualité du matériau (1.0 = standard, > 1.0 = haute qualité) : ");
+            double coefficientQualite = tools.tryParseDouble(scanner.nextLine());
+
+            // Créer et ajouter le matériau au projet
+            Materiau materiau = new Materiau(null, nomMateriau, typeComposant, tauxTVA, projetId, coutUnitaire, quantite, coutTransport, coefficientQualite);
+            boolean ajoutMateriau = materiauService.ajouterMateriau(materiau);
+            System.out.println(ajoutMateriau ? "Matériau ajouté avec succès !" : "Erreur lors de l'ajout du matériau.");
+
+            System.out.print("Voulez-vous ajouter un autre matériau ? (y/n) : ");
+            if (!scanner.nextLine().equalsIgnoreCase("y")) {
+                break;
+            }
+        }
+    }
+
+
+    private void ajouterMainOeuvre(int projetId) {
+        while (true) {
+            System.out.print("Entrez le type de main-d'œuvre : ");
+            String typeMainOeuvre = scanner.nextLine();
+
+            System.out.print("Entrez le taux horaire de cette main-d'œuvre (€/h) : ");
+            double tauxHoraire = tools.tryParseDouble(scanner.nextLine());
+
+            System.out.print("Entrez le nombre d'heures travaillées : ");
+            double heuresTravaillees = tools.tryParseDouble(scanner.nextLine());
+
+            System.out.print("Entrez le facteur de productivité (1.0 = standard, > 1.0 = haute productivité) : ");
+            double productivite = tools.tryParseDouble(scanner.nextLine());
+
+            // Créer et ajouter la main-d'œuvre au projet
+            MainOeuvre mainOeuvre = new MainOeuvre(null, typeMainOeuvre, "TypeComposant", 0.0, projetId, tauxHoraire, heuresTravaillees, productivite);
+            boolean ajoutMainOeuvre = mainOeuvreService.ajouterMainOeuvre(mainOeuvre);
+            System.out.println(ajoutMainOeuvre ? "Main-d'œuvre ajoutée avec succès !" : "Erreur lors de l'ajout de la main-d'œuvre.");
+
+            System.out.print("Voulez-vous ajouter un autre type de main-d'œuvre ? (y/n) : ");
+            if (!scanner.nextLine().equalsIgnoreCase("y")) {
+                break;
+            }
+        }
+    }
 
 }

@@ -2,6 +2,7 @@ package service.implementation;
 
 import model.Materiau;
 import repository.implementation.MateriauRepositoryImpl;
+import repository.interfaces.ClientRepository;
 import repository.interfaces.MateriauRepository;
 import service.interfaces.MateriauService;
 
@@ -14,7 +15,9 @@ public class MateriauServiceImpl implements MateriauService {
     public MateriauServiceImpl(Connection connection) {
         this.materiauRepository = new MateriauRepositoryImpl(connection);
     }
-
+    public MateriauServiceImpl(MateriauService materiauService) {
+        this.materiauRepository = materiauRepository;
+    }
     @Override
     public boolean ajouterMateriau(Materiau materiau) {
         return materiauRepository.ajouterMateriau(materiau);

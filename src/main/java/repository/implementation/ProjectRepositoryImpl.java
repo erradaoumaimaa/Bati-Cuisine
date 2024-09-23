@@ -19,21 +19,28 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     @Override
     public boolean ajouterProjet(Projet projet) {
-        String query = "INSERT INTO projets (nomProjet, margeBeneficiaire, coutTotal, etatProjet, client_id) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement st = connection.prepareStatement(query)) {
-            st.setString(1, projet.getNomProjet());
-            st.setDouble(2, projet.getMargeBeneficiaire());
-            st.setDouble(3, projet.getCoutTotal());
-            // Utiliser setObject() pour le type ENUM
-            st.setObject(4, projet.getEtatProjet().name(), java.sql.Types.OTHER); // Utiliser java.sql.Types.OTHER pour les ENUM
-            st.setInt(5, projet.getClientId());
+        String sql = "INSERT INTO projets (nomprojet, surfacecuisine, margebeneficiaire, couttotal, etatprojet, client_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, projet.getNomProjet());
+            stmt.setDouble(2, projet.getSurfaceCuisine());
+            stmt.setDouble(3, projet.getMargeBeneficiaire());
+            stmt.setDouble(4, projet.getCoutTotal());
+            stmt.setObject(5, projet.getEtatProjet().name(), java.sql.Types.OTHER);
 
-            return st.executeUpdate() > 0;
+            stmt.setInt(6, projet.getClientId());
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                projet.setId(rs.getInt("id"));
+                return true;
+            }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout du projet : " + e.getMessage());
-            return false;
+            System.err.println("Erreur lors de l'insertion du projet : " + e.getMessage());
         }
+        return false;
     }
+
+
 
 
 

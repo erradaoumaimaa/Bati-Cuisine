@@ -21,24 +21,23 @@ public class MateriauRepositoryImpl implements MateriauRepository {
     // Méthode pour ajouter un matériau
     @Override
     public boolean ajouterMateriau(Materiau materiau) {
-        String sql = "INSERT INTO materiau (nom, type_composant, taux_tva, cout_unitaire, quantite, cout_transport, coefficient_qualite, projet_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, materiau.getNom());
-            statement.setString(2, materiau.getTypeComposant());
-            statement.setDouble(3, materiau.getTauxTVA());
-            statement.setDouble(4, materiau.getCoutUnitaire());
-            statement.setDouble(5, materiau.getQuantite());
-            statement.setDouble(6, materiau.getCoutTransport());
-            statement.setDouble(7, materiau.getCoefficientQualite());
-            statement.setInt(8, materiau.getProjetId());
+        String sql = "INSERT INTO materiaux (nom, typecomposant, tauxtva, quantite, coutunitaire, projet_id) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, materiau.getNom());
+            stmt.setString(2, materiau.getTypeComposant());
+            stmt.setDouble(3, materiau.getTauxTVA());
+            stmt.setDouble(4, materiau.getQuantite());
+            stmt.setDouble(5, materiau.getCoutUnitaire());
+            stmt.setInt(6, materiau.getProjetId()); // Assurez-vous que le projet ID est correctement set
 
-            int rowsInserted = statement.executeUpdate();
-            return rowsInserted > 0;
+            stmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            System.err.println("Erreur lors de l'ajout du matériau : " + e.getMessage());
         }
+        return false;
     }
+
 
     // Méthode pour obtenir la liste des matériaux associés à un projet
     @Override

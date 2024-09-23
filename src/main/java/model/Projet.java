@@ -35,6 +35,13 @@ public class Projet {
     public void setId(Integer id) {
         this.id = id;
     }
+    public double getSurfaceCuisine(){
+        return surfaceCuisine;
+    }
+
+    public void setSurfaceCuisine(double surfaceCuisine) {
+        this.surfaceCuisine = surfaceCuisine;
+    }
 
     public String getNomProjet() {
         return nomProjet;

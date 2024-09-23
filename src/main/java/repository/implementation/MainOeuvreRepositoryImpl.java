@@ -21,17 +21,18 @@ public class MainOeuvreRepositoryImpl implements MainOeuvreRepository {
     // Méthode pour ajouter une main-d'œuvre
     @Override
     public boolean ajouterMainOeuvre(MainOeuvre mainOeuvre) {
-        String sql = "INSERT INTO main_oeuvre (nom, type_composant, taux_tva, taux_horaire, heures_travail, productivite_ouvrier, projet_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO main_oeuvre (nom, typecomposant, tauxtva, projet_id, tauxhoraire, heurestravail, productiviteouvrier) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, mainOeuvre.getNom());
             statement.setString(2, mainOeuvre.getTypeComposant());
             statement.setDouble(3, mainOeuvre.getTauxTVA());
-            statement.setDouble(4, mainOeuvre.getTauxHoraire());
-            statement.setDouble(5, mainOeuvre.getHeuresTravail());
-            statement.setDouble(6, mainOeuvre.getProductiviteOuvrier());
-            statement.setInt(7, mainOeuvre.getProjetId());
+            statement.setInt(4, mainOeuvre.getProjetId());
+            statement.setDouble(5, mainOeuvre.getTauxHoraire());
+            statement.setDouble(6, mainOeuvre.getHeuresTravail());
+            statement.setDouble(7, mainOeuvre.getProductiviteOuvrier());
 
             int rowsInserted = statement.executeUpdate();
+
             return rowsInserted > 0;
         } catch (SQLException e) {
             e.printStackTrace();
