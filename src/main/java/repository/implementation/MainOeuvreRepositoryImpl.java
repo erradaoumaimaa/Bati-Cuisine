@@ -52,12 +52,12 @@ public class MainOeuvreRepositoryImpl implements MainOeuvreRepository {
                     MainOeuvre mainOeuvre = new MainOeuvre(
                             resultSet.getInt("id"),
                             resultSet.getString("nom"),
-                            resultSet.getString("type_composant"),
-                            resultSet.getDouble("taux_tva"),
+                            resultSet.getString("typecomposant"),
+                            resultSet.getDouble("tauxtva"),
                             resultSet.getInt("projet_id"),
-                            resultSet.getDouble("taux_horaire"),
-                            resultSet.getDouble("heures_travail"),
-                            resultSet.getDouble("productivite_ouvrier")
+                            resultSet.getDouble("tauxhoraire"),
+                            resultSet.getDouble("heurestravail"),
+                            resultSet.getDouble("productiviteouvrier")
                     );
                     mainOeuvres.add(mainOeuvre);
                 }

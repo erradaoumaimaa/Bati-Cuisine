@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Devis {
-    private UUID id;
+    private Integer id;
     private double montantEstime;
     private LocalDate dateEmission;
     private LocalDate dateValidite;
@@ -14,7 +14,7 @@ public class Devis {
     public Devis() {}
 
     // Constructeur avec tous les attributs
-    public Devis(UUID id, double montantEstime, LocalDate dateEmission, LocalDate dateValidite, boolean accepte) {
+    public Devis(Integer id, double montantEstime, LocalDate dateEmission, LocalDate dateValidite, boolean accepte) {
         this.id = id;
         this.montantEstime = montantEstime;
         this.dateEmission = dateEmission;
@@ -23,11 +23,11 @@ public class Devis {
     }
 
     // Getters et Setters
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

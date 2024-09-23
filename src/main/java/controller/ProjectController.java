@@ -124,6 +124,8 @@ public class ProjectController {
         } else {
             System.out.println("Erreur lors de l'ajout du projet.");
         }
+        calculerCoutTotal(projet.getId());
+
     }
 
     private void ajouterMateriaux(int projetId) {
@@ -177,7 +179,9 @@ public class ProjectController {
             if (!scanner.nextLine().equalsIgnoreCase("y")) {
                 break;
             }
+
         }
+
     }
 
     private void ajouterMainOeuvre(int projetId) {
@@ -187,7 +191,12 @@ public class ProjectController {
 
             System.out.print("Entrez le type de main-d'œuvre : ");
             String typeMainOeuvre = scanner.nextLine();
-
+            System.out.print("Entrez le taux de TVA : ");
+            double tauxTVA = tools.tryParseDouble(scanner.nextLine());
+            if (tauxTVA < 0 || tauxTVA > 100) {
+                System.out.println("Taux de TVA invalide.");
+                continue;
+            }
             System.out.print("Entrez le taux horaire de cette main-d'œuvre (€/h) : ");
             double tauxHoraire = tools.tryParseDouble(scanner.nextLine());
             if (tauxHoraire <= 0) {
@@ -232,5 +241,63 @@ public class ProjectController {
             System.out.println(projet);
         }
     }
+    private void calculerCoutTotal(int projetId) {
+        double totalMateriaux = 0.0;
+        double totalMainOeuvre = 0.0;
+
+        // Récupération des matériaux
+        List<Materiau> materiaux = materiauService.getMateriauxByProjetId(projetId);
+        System.out.println("--- Détail des Coûts ---");
+
+        for (Materiau materiau : materiaux) {
+            double coutMateriau = (materiau.getCoutUnitaire() * materiau.getQuantite()) + materiau.getCoutTransport();
+            totalMateriaux += coutMateriau * materiau.getCoefficientQualite();
+            System.out.printf("- %s : %.2f € (quantité : %.2f, coût unitaire : %.2f €, transport : %.2f €)\n",
+                    materiau.getNom(), coutMateriau * materiau.getCoefficientQualite(),
+                    materiau.getQuantite(), materiau.getCoutUnitaire(), materiau.getCoutTransport());
+        }
+
+        System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalMateriaux);
+
+        // Calcul de la TVA sur les matériaux
+        double tvaMateriaux = totalMateriaux * 0.20; // Exemple avec 20% de TVA
+        totalMateriaux += tvaMateriaux;
+        System.out.printf("**Coût total des matériaux avec TVA (20%%) : %.2f €**\n", totalMateriaux);
+
+        // Récupération de la main-d'œuvre
+        List<MainOeuvre> mainOeuvres = mainOeuvreService.getMainOeuvresByProjetId(projetId);
+
+        for (MainOeuvre mainOeuvre : mainOeuvres) {
+            double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
+            totalMainOeuvre += coutMainOeuvre * mainOeuvre.getProductiviteOuvrier();
+            System.out.printf("- %s : %.2f € (taux horaire : %.2f €, heures travaillées : %.2f h)\n",
+                    mainOeuvre.getNom(), coutMainOeuvre * mainOeuvre.getProductiviteOuvrier(),
+                    mainOeuvre.getTauxHoraire(), mainOeuvre.getHeuresTravail());
+        }
+
+        System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f €**\n", totalMainOeuvre);
+
+        // Calcul de la TVA sur la main-d'œuvre
+        double tvaMainOeuvre = totalMainOeuvre * 0.20; // Exemple avec 20% de TVA
+        totalMainOeuvre += tvaMainOeuvre;
+        System.out.printf("**Coût total de la main-d'œuvre avec TVA (20%%) : %.2f €**\n", totalMainOeuvre);
+
+        // Calcul du coût total avant marge
+        double coutTotalAvantMarge = totalMateriaux + totalMainOeuvre;
+        System.out.printf("3. Coût total avant marge : %.2f €\n", coutTotalAvantMarge);
+
+        // Calcul de la marge bénéficiaire
+        System.out.print("Souhaitez-vous appliquer une marge bénéficiaire au projet ? (y/n) : ");
+        if (scanner.nextLine().equalsIgnoreCase("y")) {
+            System.out.print("Entrez le pourcentage de marge bénéficiaire (%) : ");
+            double margeBeneficiaire = tools.tryParseDouble(scanner.nextLine()) / 100;
+            double marge = coutTotalAvantMarge * margeBeneficiaire;
+            coutTotalAvantMarge += marge;
+            System.out.printf("**Marge bénéficiaire (%.0f%%) : %.2f €**\n", margeBeneficiaire * 100, marge);
+        }
+
+        System.out.printf("**Coût total final du projet : %.2f €**\n", coutTotalAvantMarge);
+    }
+
 
 }

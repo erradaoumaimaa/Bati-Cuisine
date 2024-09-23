@@ -21,14 +21,16 @@ public class MateriauRepositoryImpl implements MateriauRepository {
     // Méthode pour ajouter un matériau
     @Override
     public boolean ajouterMateriau(Materiau materiau) {
-        String sql = "INSERT INTO materiaux (nom, typecomposant, tauxtva, quantite, coutunitaire, projet_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO materiaux (nom, typecomposant, tauxtva, quantite, coutunitaire, couttransport, coefficientqualite, projet_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, materiau.getNom());
             stmt.setString(2, materiau.getTypeComposant());
             stmt.setDouble(3, materiau.getTauxTVA());
             stmt.setDouble(4, materiau.getQuantite());
             stmt.setDouble(5, materiau.getCoutUnitaire());
-            stmt.setInt(6, materiau.getProjetId()); // Assurez-vous que le projet ID est correctement set
+            stmt.setDouble(6, materiau.getCoutTransport());
+            stmt.setDouble(7, materiau.getCoefficientQualite());
+            stmt.setInt(8, materiau.getProjetId());
 
             stmt.executeUpdate();
             return true;
@@ -38,13 +40,11 @@ public class MateriauRepositoryImpl implements MateriauRepository {
         return false;
     }
 
-
     // Méthode pour obtenir la liste des matériaux associés à un projet
     @Override
     public List<Materiau> getMateriauxByProjetId(int projetId) {
         List<Materiau> materiaux = new ArrayList<>();
-        String sql = "SELECT * FROM materiau WHERE projet_id = ?";
-
+        String sql = "SELECT * FROM materiaux WHERE projet_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, projetId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -52,13 +52,13 @@ public class MateriauRepositoryImpl implements MateriauRepository {
                     Materiau materiau = new Materiau(
                             resultSet.getInt("id"),
                             resultSet.getString("nom"),
-                            resultSet.getString("type_composant"),
-                            resultSet.getDouble("taux_tva"),
+                            resultSet.getString("typecomposant"),
+                            resultSet.getDouble("tauxtva"),
                             resultSet.getInt("projet_id"),
-                            resultSet.getDouble("cout_unitaire"),
+                            resultSet.getDouble("coutunitaire"),
                             resultSet.getDouble("quantite"),
-                            resultSet.getDouble("cout_transport"),
-                            resultSet.getDouble("coefficient_qualite")
+                            resultSet.getDouble("couttransport"),
+                            resultSet.getDouble("coefficientqualite")
                     );
                     materiaux.add(materiau);
                 }
