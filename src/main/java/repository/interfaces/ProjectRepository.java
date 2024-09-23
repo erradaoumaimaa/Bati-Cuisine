@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ProjectRepository {
     boolean ajouterProjet(Projet projet);
-
+    List<Projet> afficherTousProjets();
 }

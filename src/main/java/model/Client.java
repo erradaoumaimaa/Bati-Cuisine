@@ -13,7 +13,10 @@ public class Client {
     public Client() {
 
     }
-
+    public Client(Integer id, String nom) {
+        this.id = id;
+        this.nom = nom;
+    }
     // Constructeur avec tous les attributs :
     public Client(String nom, String adresse, String telephone, boolean estProfessionnel) {
         this.nom = nom;

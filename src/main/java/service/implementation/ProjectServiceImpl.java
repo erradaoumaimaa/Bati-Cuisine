@@ -22,6 +22,9 @@ public class ProjectServiceImpl implements ProjectService {
     public boolean ajouterProjet(Projet projet) {
         return projectRepository.ajouterProjet(projet);
     }
-
+    @Override
+    public List<Projet> afficherTousClientsAvecProjets() {
+        return projectRepository.afficherTousProjets();
+    }
 
 }

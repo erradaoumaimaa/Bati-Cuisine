@@ -32,7 +32,6 @@ public class MainOeuvreRepositoryImpl implements MainOeuvreRepository {
             statement.setDouble(7, mainOeuvre.getProductiviteOuvrier());
 
             int rowsInserted = statement.executeUpdate();
-
             return rowsInserted > 0;
         } catch (SQLException e) {
             e.printStackTrace();

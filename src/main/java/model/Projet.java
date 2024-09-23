@@ -12,8 +12,16 @@ public class Projet {
     private double surfaceCuisine;
     private EtatProjet etatProjet;
     private Integer clientId;
-
-
+    private Client client;
+    public Projet(Integer id, String nomProjet, double surfaceCuisine, double margeBeneficiaire, double coutTotal, EtatProjet etatProjet, Client client) {
+        this.id = id;
+        this.nomProjet = nomProjet;
+        this.surfaceCuisine = surfaceCuisine;
+        this.margeBeneficiaire = margeBeneficiaire;
+        this.coutTotal = coutTotal;
+        this.etatProjet = etatProjet;
+        this.client = client;
+    }
     // Constructeur par défaut :
     public Projet() {}
 
@@ -89,7 +97,7 @@ public class Projet {
                 ", margeBeneficiaire=" + margeBeneficiaire +
                 ", coutTotal=" + coutTotal +
                 ", etatProjet=" + etatProjet +
-                ", client_ID=" + clientId +
+                ", client=" + client.getNom() +
                 '}';
     }
 }

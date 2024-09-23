@@ -57,7 +57,7 @@ public class AppMenu {
 
         switch (choice) {
             case 1 -> projectController.creerNouveauProjet(); // Appel à la méthode de création de projet
-            //case 2 -> projectController.afficherProjets(); // Afficher les projets existants (méthode à implémenter)
+            case 2 -> projectController.afficherProjetsAvecClients(); // Afficher les projets existants (méthode à implémenter)
            // case 3 -> projectController.calculerCoutProjet(); // Calculer le coût d'un projet (méthode à implémenter)
             case 4 -> {
                 System.out.println("Au revoir !");
