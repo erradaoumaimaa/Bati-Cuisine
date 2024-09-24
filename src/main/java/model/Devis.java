@@ -1,7 +1,6 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.*;
 
 public class Devis {
     private Integer id;
@@ -9,11 +8,32 @@ public class Devis {
     private LocalDate dateEmission;
     private LocalDate dateValidite;
     private boolean accepte;
+    private Integer projetId;
+    private Projet project;
 
     // Constructeur par défaut
     public Devis() {}
 
     // Constructeur avec tous les attributs
+    public Devis(Integer id, double montantEstime, LocalDate dateEmission, LocalDate dateValidite, boolean accepte, Integer projetId, Projet project) {
+        this.id = id;
+        this.montantEstime = montantEstime;
+        this.dateEmission = dateEmission;
+        this.dateValidite = dateValidite;
+        this.accepte = accepte;
+        this.projetId = projetId;
+        this.project = project; // Initialisation de project
+    }
+    public Devis(Integer id, double montantEstime, LocalDate dateEmission, LocalDate dateValidite, boolean accepte, int projetId) {
+        this.id = id;
+        this.montantEstime = montantEstime;
+        this.dateEmission = dateEmission;
+        this.dateValidite = dateValidite;
+        this.accepte = accepte;
+        this.projetId = projetId;
+    }
+
+    // Autre constructeur sans projectId et project
     public Devis(Integer id, double montantEstime, LocalDate dateEmission, LocalDate dateValidite, boolean accepte) {
         this.id = id;
         this.montantEstime = montantEstime;
@@ -63,6 +83,22 @@ public class Devis {
         this.accepte = accepte;
     }
 
+    public Integer getProjectId() {
+        return projetId;
+    }
+
+    public void setProjectId(Integer projectId) {
+        this.projetId = projectId;
+    }
+
+    public Projet getProject() {
+        return project;
+    }
+
+    public void setProject(Projet project) {
+        this.project = project;
+    }
+
     @Override
     public String toString() {
         return "Devis{" +
@@ -71,6 +107,7 @@ public class Devis {
                 ", dateEmission=" + dateEmission +
                 ", dateValidite=" + dateValidite +
                 ", accepte=" + accepte +
+                ", Nom projet=" + (project != null ? project.getNomProjet() : "non défini") +
                 '}';
     }
 }
