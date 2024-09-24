@@ -58,7 +58,7 @@ public class ProjectController {
                 return;
         }
         if (client != null) {
-            System.out.println("Client sélectionné : " + client);
+            System.out.println("Client sélectionné : " + client.getNom());
             continuerCreationProjet(client.getId());
         } else {
             System.out.println("Aucun client sélectionné.");

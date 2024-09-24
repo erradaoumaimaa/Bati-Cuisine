@@ -1,8 +1,6 @@
 package org.example;
 
 import controller.AppMenu;
-import repository.implementation.ClientRepositoryImpl;
-import service.implementation.ClientServiceImpl;
 import util.JdbcConnection;
 
 import java.sql.Connection;
