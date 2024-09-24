@@ -1,13 +1,7 @@
 package controller;
 
-import service.implementation.ClientServiceImpl;
-import service.implementation.MainOeuvreServiceImpl;
-import service.implementation.MateriauServiceImpl;
-import service.implementation.ProjectServiceImpl;
-import service.interfaces.ClientService;
-import service.interfaces.MainOeuvreService;
-import service.interfaces.MateriauService;
-import service.interfaces.ProjectService;
+import service.implementation.*;
+import service.interfaces.*;
 import util.tools;
 
 import java.sql.Connection;
@@ -21,6 +15,7 @@ public class AppMenu {
     private final MateriauService materiauService;
     private final MainOeuvreService mainOeuvreService;
     private final ProjectService projectService;
+    private final DevisService devisService;
     private final ProjectController projectController;
 
     // Constructeur privé pour empêcher l'instanciation extérieure
@@ -29,8 +24,9 @@ public class AppMenu {
         this.clientController = new ClientController(clientService);
         this.materiauService = new MateriauServiceImpl(connection);
         this.mainOeuvreService = new MainOeuvreServiceImpl(connection);
-        this.projectService = new ProjectServiceImpl(connection); // Initialisation du ProjectService
-        this.projectController = new ProjectController(projectService, clientService, materiauService, mainOeuvreService, new Scanner(System.in), clientController);
+        this.projectService = new ProjectServiceImpl(connection);
+        this.devisService = new DevisServiceImpl(connection);// Initialisation du ProjectService
+        this.projectController = new ProjectController(projectService, clientService, materiauService, mainOeuvreService,devisService ,new Scanner(System.in), clientController);
     }
 
     // Méthode pour obtenir l'instance unique d'AppMenu
@@ -58,7 +54,7 @@ public class AppMenu {
         switch (choice) {
             case 1 -> projectController.creerNouveauProjet(); // Appel à la méthode de création de projet
             case 2 -> projectController.afficherProjetsAvecClients(); // Afficher les projets existants (méthode à implémenter)
-           // case 3 -> projectController.calculerCoutProjet(); // Calculer le coût d'un projet (méthode à implémenter)
+//            case 3 -> projectController.genererDevis(); // Calculer le coût d'un projet (méthode à implémenter)
             case 4 -> {
                 System.out.println("Au revoir !");
                 scanner.close();

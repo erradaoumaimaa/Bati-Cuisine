@@ -1,16 +1,12 @@
 package controller;
 
-import model.Client;
-import model.MainOeuvre;
-import model.Materiau;
-import model.Projet;
-import service.interfaces.ClientService;
-import service.interfaces.MainOeuvreService;
-import service.interfaces.MateriauService;
-import service.interfaces.ProjectService;
+import model.*;
+import service.interfaces.*;
 import util.tools;
 import Enum.EtatProjet;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,16 +15,18 @@ public class ProjectController {
     private final ClientService clientService;
     private final MateriauService materiauService;
     private final MainOeuvreService mainOeuvreService;
+    private final DevisService devisService;
     private final Scanner scanner;
     private final ClientController clientController;
 
     public ProjectController(ProjectService projectService, ClientService clientService,
                              MateriauService materiauService, MainOeuvreService mainOeuvreService,
-                             Scanner scanner, ClientController clientController) {
+                             DevisService devisService, Scanner scanner, ClientController clientController) {
         this.projectService = projectService;
         this.clientService = clientService;
         this.materiauService = materiauService;
         this.mainOeuvreService = mainOeuvreService;
+        this.devisService = devisService;
         this.scanner = scanner;
         this.clientController = clientController;
     }
@@ -121,12 +119,51 @@ public class ProjectController {
             // Ajout de la main-d'œuvre
             ajouterMainOeuvre(projetId);
 
+            // Calcul du coût total (matériaux + main-d'œuvre)
+            calculerCoutTotal(projet.getId());
+
+            // Générer le devis basé sur les données du projet
+            genererDevis(projet.getId());
+
         } else {
             System.out.println("Erreur lors de l'ajout du projet.");
         }
-        calculerCoutTotal(projet.getId());
-
     }
+
+    // Méthode pour générer un devis
+
+    public void genererDevis(int projetId) {
+        System.out.println("--- Enregistrement du Devis ---");
+
+        System.out.print("Entrez la date d'émission du devis (format : jj/mm/aaaa) : ");
+        String dateEmissionInput = scanner.nextLine();
+        LocalDate dateEmission = LocalDate.parse(dateEmissionInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        System.out.print("Entrez la date de validité du devis (format : jj/mm/aaaa) : ");
+        String dateValiditeInput = scanner.nextLine();
+        LocalDate dateValidite = LocalDate.parse(dateValiditeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        System.out.print("Entrez le montant estimé : ");
+        double montantEstime = scanner.nextDouble();
+
+        System.out.print("Souhaitez-vous enregistrer le devis ? (y/n) : ");
+        String confirmation = scanner.next();
+
+        if (confirmation.equalsIgnoreCase("y")) {
+            Devis devis = new Devis(null, montantEstime, dateEmission, dateValidite, false, projetId);
+            boolean ajoutReussi = devisService.ajouterDevis(devis);
+
+            if (ajoutReussi) {
+                System.out.println("Devis enregistré avec succès !");
+            } else {
+                System.out.println("Erreur lors de l'enregistrement du devis.");
+            }
+        } else {
+            System.out.println("Enregistrement du devis annulé.");
+        }
+    }
+
+
 
     private void ajouterMateriaux(int projetId) {
         while (true) {
@@ -179,9 +216,7 @@ public class ProjectController {
             if (!scanner.nextLine().equalsIgnoreCase("y")) {
                 break;
             }
-
         }
-
     }
 
     private void ajouterMainOeuvre(int projetId) {
@@ -197,6 +232,7 @@ public class ProjectController {
                 System.out.println("Taux de TVA invalide.");
                 continue;
             }
+
             System.out.print("Entrez le taux horaire de cette main-d'œuvre (€/h) : ");
             double tauxHoraire = tools.tryParseDouble(scanner.nextLine());
             if (tauxHoraire <= 0) {
@@ -228,6 +264,7 @@ public class ProjectController {
             }
         }
     }
+
     public void afficherProjetsAvecClients() {
         List<Projet> projets = projectService.afficherTousClientsAvecProjets();
 
@@ -241,7 +278,8 @@ public class ProjectController {
             System.out.println(projet);
         }
     }
-    private void calculerCoutTotal(int projetId) {
+
+    public double calculerCoutTotal(int projetId) {
         double totalMateriaux = 0.0;
         double totalMainOeuvre = 0.0;
 
@@ -260,7 +298,7 @@ public class ProjectController {
         System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalMateriaux);
 
         // Calcul de la TVA sur les matériaux
-        double tvaMateriaux = totalMateriaux * 0.20; // Exemple avec 20% de TVA
+        double tvaMateriaux = totalMateriaux * 0.20;
         totalMateriaux += tvaMateriaux;
         System.out.printf("**Coût total des matériaux avec TVA (20%%) : %.2f €**\n", totalMateriaux);
 
@@ -278,7 +316,7 @@ public class ProjectController {
         System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f €**\n", totalMainOeuvre);
 
         // Calcul de la TVA sur la main-d'œuvre
-        double tvaMainOeuvre = totalMainOeuvre * 0.20; // Exemple avec 20% de TVA
+        double tvaMainOeuvre = totalMainOeuvre * 0.20;
         totalMainOeuvre += tvaMainOeuvre;
         System.out.printf("**Coût total de la main-d'œuvre avec TVA (20%%) : %.2f €**\n", totalMainOeuvre);
 
@@ -297,7 +335,8 @@ public class ProjectController {
         }
 
         System.out.printf("**Coût total final du projet : %.2f €**\n", coutTotalAvantMarge);
-    }
 
+        return coutTotalAvantMarge; // Retourne le coût total final
+    }
 
 }
