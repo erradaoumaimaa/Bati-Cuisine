@@ -8,4 +8,5 @@ public interface ProjectService  {
 
     boolean ajouterProjet(Projet projet);
     List<Projet> afficherTousClientsAvecProjets();
+
 }

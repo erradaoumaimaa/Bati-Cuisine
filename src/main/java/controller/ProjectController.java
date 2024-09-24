@@ -163,8 +163,6 @@ public class ProjectController {
         }
     }
 
-
-
     private void ajouterMateriaux(int projetId) {
         while (true) {
             System.out.print("Entrez le nom du matériau : ");
@@ -336,7 +334,7 @@ public class ProjectController {
 
         System.out.printf("**Coût total final du projet : %.2f €**\n", coutTotalAvantMarge);
 
-        return coutTotalAvantMarge; // Retourne le coût total final
+        return coutTotalAvantMarge;
     }
 
 }
