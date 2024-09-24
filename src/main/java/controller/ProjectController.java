@@ -57,13 +57,13 @@ public class ProjectController {
                 System.out.println("Choix invalide.");
                 return;
         }
-
         if (client != null) {
             System.out.println("Client sélectionné : " + client);
             continuerCreationProjet(client.getId());
         } else {
             System.out.println("Aucun client sélectionné.");
         }
+
     }
 
     private void continuerCreationProjet(int clientId) {
@@ -111,7 +111,7 @@ public class ProjectController {
 
         if (ajoutReussi) {
             int projetId = projet.getId();
-            System.out.println("Projet ajouté avec succès avec l'ID : " + projetId);
+            System.out.println("Projet ajouté avec succès  " );
 
             // Ajout des matériaux
             ajouterMateriaux(projetId);
@@ -143,14 +143,14 @@ public class ProjectController {
         String dateValiditeInput = scanner.nextLine();
         LocalDate dateValidite = LocalDate.parse(dateValiditeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        System.out.print("Entrez le montant estimé : ");
-        double montantEstime = scanner.nextDouble();
+//        System.out.print("Entrez le montant estimé : ");
+//        double montantEstime = scanner.nextDouble();
 
         System.out.print("Souhaitez-vous enregistrer le devis ? (y/n) : ");
         String confirmation = scanner.next();
 
         if (confirmation.equalsIgnoreCase("y")) {
-            Devis devis = new Devis(null, montantEstime, dateEmission, dateValidite, false, projetId);
+            Devis devis = new Devis(null, dateEmission, dateValidite, true, projetId);
             boolean ajoutReussi = devisService.ajouterDevis(devis);
 
             if (ajoutReussi) {

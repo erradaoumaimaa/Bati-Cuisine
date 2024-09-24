@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class AppMenu {
-    private static AppMenu instance; // Ajout de la variable instance pour le pattern singleton
+    private static AppMenu instance;
     private final ClientService clientService;
     private final ClientController clientController;
     private final MateriauService materiauService;
@@ -25,7 +25,7 @@ public class AppMenu {
         this.materiauService = new MateriauServiceImpl(connection);
         this.mainOeuvreService = new MainOeuvreServiceImpl(connection);
         this.projectService = new ProjectServiceImpl(connection);
-        this.devisService = new DevisServiceImpl(connection);// Initialisation du ProjectService
+        this.devisService = new DevisServiceImpl(connection);
         this.projectController = new ProjectController(projectService, clientService, materiauService, mainOeuvreService,devisService ,new Scanner(System.in), clientController);
     }
 
@@ -45,16 +45,14 @@ public class AppMenu {
         System.out.println("=== Menu Principal ===");
         System.out.println("1. Créer un nouveau projet");
         System.out.println("2. Afficher les projets existants");
-        System.out.println("3. Calculer le coût d'un projet");
         System.out.println("4. Quitter");
         System.out.print("Choisissez une option : ");
 
         int choice = tools.tryParse(scanner.nextLine());
 
         switch (choice) {
-            case 1 -> projectController.creerNouveauProjet(); // Appel à la méthode de création de projet
-            case 2 -> projectController.afficherProjetsAvecClients(); // Afficher les projets existants (méthode à implémenter)
-//            case 3 -> projectController.genererDevis(); // Calculer le coût d'un projet (méthode à implémenter)
+            case 1 -> projectController.creerNouveauProjet();
+            case 2 -> projectController.afficherProjetsAvecClients();
             case 4 -> {
                 System.out.println("Au revoir !");
                 scanner.close();
@@ -63,7 +61,6 @@ public class AppMenu {
             default -> System.out.println("Choix invalide. Veuillez réessayer.");
         }
 
-        // Afficher à nouveau le menu après l'exécution d'une action
         displayMainMenu();
     }
 }

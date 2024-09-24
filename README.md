@@ -85,6 +85,15 @@ Le projet utilise les bibliothèques suivantes :
 
 ---
 
+
+## 🛠️ Fichier Exécutable
+
+Le fichier exécutable JAR se trouve dans le dossier `out`. Vous pouvez exécuter l'application en utilisant la commande suivante dans votre terminal :
+
+```bash
+java -jar out/artifacts/Bati_Cuisine_jar/Bati-Cuisine.jar
+```
+ ---
 ## 🚀 Améliorations futures
 
 - 🎨 Intégration d'une interface graphique (GUI) pour une meilleure expérience utilisateur.

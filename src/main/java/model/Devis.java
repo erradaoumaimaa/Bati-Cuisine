@@ -24,9 +24,8 @@ public class Devis {
         this.projetId = projetId;
         this.project = project; // Initialisation de project
     }
-    public Devis(Integer id, double montantEstime, LocalDate dateEmission, LocalDate dateValidite, boolean accepte, int projetId) {
+    public Devis(Integer id, LocalDate dateEmission, LocalDate dateValidite, boolean accepte, int projetId) {
         this.id = id;
-        this.montantEstime = montantEstime;
         this.dateEmission = dateEmission;
         this.dateValidite = dateValidite;
         this.accepte = accepte;
@@ -75,7 +74,7 @@ public class Devis {
         this.dateValidite = dateValidite;
     }
 
-    public boolean isAccepte() {
+    public boolean getAccepte() {
         return accepte;
     }
 

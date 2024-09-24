@@ -18,13 +18,12 @@ public class DevisRepositoryImpl implements DevisRepository {
 
     @Override
     public boolean ajouterDevis(Devis devis) {
-        String sql = "INSERT INTO devis (montantEstime, dateEmission, dateValidite, accepte, projet_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO devis (dateEmission, dateValidite, accepte, projet_id) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setDouble(1, devis.getMontantEstime());
-            stmt.setDate(2, java.sql.Date.valueOf(devis.getDateEmission()));
-            stmt.setDate(3, java.sql.Date.valueOf(devis.getDateValidite()));
-            stmt.setBoolean(4, devis.isAccepte());
-            stmt.setInt(5, devis.getProjectId());
+            stmt.setDate(1, java.sql.Date.valueOf(devis.getDateEmission()));
+            stmt.setDate(2, java.sql.Date.valueOf(devis.getDateValidite()));
+            stmt.setBoolean(3, devis.getAccepte());
+            stmt.setInt(4, devis.getProjectId());
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

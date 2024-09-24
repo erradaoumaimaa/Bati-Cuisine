@@ -29,14 +29,6 @@ CREATE TABLE composants (
     tauxTVA DOUBLE PRECISION,
     projet_id INT REFERENCES projets(id) ON DELETE CASCADE 
 );
---table composants :
-CREATE TABLE composants (
-    id SERIAL PRIMARY KEY,
-    nom VARCHAR(100),
-    typeComposant VARCHAR(50), 
-    tauxTVA DOUBLE PRECISION,
-    projet_id INT REFERENCES projets(id) ON DELETE CASCADE 
-);
 
 -- Table Matériaux qui hérite de Composants :
 CREATE TABLE materiaux (
