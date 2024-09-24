@@ -1,7 +1,6 @@
 package service.implementation;
 
 import model.MainOeuvre;
-import repository.implementation.ClientRepositoryImpl;
 import repository.implementation.MainOeuvreRepositoryImpl;
 import repository.interfaces.MainOeuvreRepository;
 import service.interfaces.MainOeuvreService;

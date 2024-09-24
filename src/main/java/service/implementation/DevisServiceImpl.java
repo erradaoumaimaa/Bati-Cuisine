@@ -2,7 +2,6 @@ package service.implementation;
 
 import model.Devis;
 import repository.implementation.DevisRepositoryImpl;
-import repository.implementation.ProjectRepositoryImpl;
 import repository.interfaces.DevisRepository;
 import service.interfaces.DevisService;
 

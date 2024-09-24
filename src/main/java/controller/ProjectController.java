@@ -278,47 +278,47 @@ public class ProjectController {
     }
 
     public double calculerCoutTotal(int projetId) {
-        double totalMateriaux = 0.0;
-        double totalMainOeuvre = 0.0;
-
-        // Récupération des matériaux
+        // Récupérer les matériaux
         List<Materiau> materiaux = materiauService.getMateriauxByProjetId(projetId);
         System.out.println("--- Détail des Coûts ---");
 
-        for (Materiau materiau : materiaux) {
-            double coutMateriau = (materiau.getCoutUnitaire() * materiau.getQuantite()) + materiau.getCoutTransport();
-            totalMateriaux += coutMateriau * materiau.getCoefficientQualite();
-            System.out.printf("- %s : %.2f € (quantité : %.2f, coût unitaire : %.2f €, transport : %.2f €)\n",
-                    materiau.getNom(), coutMateriau * materiau.getCoefficientQualite(),
-                    materiau.getQuantite(), materiau.getCoutUnitaire(), materiau.getCoutTransport());
-        }
+        // Calcul  pour  matériaux
+        double totalMateriaux = materiaux.stream()
+                .mapToDouble(materiau -> {
+                    double coutMateriau = (materiau.getCoutUnitaire() * materiau.getQuantite()) + materiau.getCoutTransport();
+                    double coutTotalMateriau = coutMateriau * materiau.getCoefficientQualite();
+                    System.out.printf("- %s : %.2f € (quantité : %.2f, coût unitaire : %.2f €, transport : %.2f €)\n",
+                            materiau.getNom(), coutTotalMateriau, materiau.getQuantite(), materiau.getCoutUnitaire(), materiau.getCoutTransport());
+                    return coutTotalMateriau;
+                }).sum();
 
         System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalMateriaux);
 
-        // Calcul de la TVA sur les matériaux
         double tvaMateriaux = totalMateriaux * 0.20;
         totalMateriaux += tvaMateriaux;
         System.out.printf("**Coût total des matériaux avec TVA (20%%) : %.2f €**\n", totalMateriaux);
 
-        // Récupération de la main-d'œuvre
+        // Récupérer le main d'oeuvre
         List<MainOeuvre> mainOeuvres = mainOeuvreService.getMainOeuvresByProjetId(projetId);
 
-        for (MainOeuvre mainOeuvre : mainOeuvres) {
-            double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
-            totalMainOeuvre += coutMainOeuvre * mainOeuvre.getProductiviteOuvrier();
-            System.out.printf("- %s : %.2f € (taux horaire : %.2f €, heures travaillées : %.2f h)\n",
-                    mainOeuvre.getNom(), coutMainOeuvre * mainOeuvre.getProductiviteOuvrier(),
-                    mainOeuvre.getTauxHoraire(), mainOeuvre.getHeuresTravail());
-        }
+        // Calcul
+        double totalMainOeuvre = mainOeuvres.stream()
+                .mapToDouble(mainOeuvre -> {
+                    double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
+                    double coutTotalMainOeuvre = coutMainOeuvre * mainOeuvre.getProductiviteOuvrier();
+                    System.out.printf("- %s : %.2f € (taux horaire : %.2f €, heures travaillées : %.2f h)\n",
+                            mainOeuvre.getNom(), coutTotalMainOeuvre, mainOeuvre.getTauxHoraire(), mainOeuvre.getHeuresTravail());
+                    return coutTotalMainOeuvre;
+                }).sum();
 
         System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f €**\n", totalMainOeuvre);
 
-        // Calcul de la TVA sur la main-d'œuvre
+        //  TVA sur la main-d'œuvre
         double tvaMainOeuvre = totalMainOeuvre * 0.20;
         totalMainOeuvre += tvaMainOeuvre;
         System.out.printf("**Coût total de la main-d'œuvre avec TVA (20%%) : %.2f €**\n", totalMainOeuvre);
 
-        // Calcul du coût total avant marge
+        // coût total avant marge
         double coutTotalAvantMarge = totalMateriaux + totalMainOeuvre;
         System.out.printf("3. Coût total avant marge : %.2f €\n", coutTotalAvantMarge);
 
@@ -336,5 +336,6 @@ public class ProjectController {
 
         return coutTotalAvantMarge;
     }
+
 
 }
